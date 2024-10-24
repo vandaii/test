@@ -1,391 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puzzle Game</title>
     <style>
-      body {
-        background-image: url("asset/bg.png");
-        background-size: cover;
-        background-position: center;
-        
-        display: flex;
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
-        margin: 0;
-        height: 100vh;
-      }
-      .grid-container {
-        display: grid;
-        grid-template-columns: repeat(2, 200px);
-        grid-template-rows: repeat(2, 200px);
-        gap: 100px; /* Adjusted gap for better layout */
-        position: relative; /* Tambahkan ini */
-      }
-      .box {
-        width: 200px;
-        height: 200px;
-        cursor: grab;
-        transition: transform 0.2s ease; /* Smooth transition */
-        z-index: 2; /* Higher z-index for boxes to appear on top of the panel */
-        position: absolute; /* Ubah menjadi absolute */
-      }
-      .box.dragging {
-        opacity: 1;
-      }
-      .red {
-        background-image: url("asset/ppanjang.png");
-        
-      }
-      .green {
-        background-image: url("asset/kotak.png");
-        
-      }
-      .blue {
-        background-image: url("asset/segitiga.png");
-        
-      }
-      .purple {
-        background-image: url("asset/lingkaran.png");
-        
-      }
-      .orange {
-        background-image: url("asset/tick.png");
-        display: none;
-      }
-      .panel {
-        z-index: 1; /* Lower z-index for the panel */
-        background-color: #97bdfe;
-        width: 300px;
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-end;
-        padding: 20px;
-        border-radius: 0px 18px 18px 0px;
-      }
-      .button {
-        width: 200px;
-        height: 100px;
-        background-color: #555;
-        color: white;
-        border: none;
-        cursor: pointer;
-        margin-bottom: 20px;
-      }
-      .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-      }
-      .input-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 99;
-      }
-      .input-container input {
-        margin-bottom: 10px;
-        z-index: 100;
-      }
-      .box.orange {
-        background-color: orange;
-        pointer-events: none;
-      }
-      .validation-box {
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        background-image: url("asset/tick.png");
-        box-sizing: border-box;
-        z-index: 3;
-      }
-      .popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        z-index: 10;
-        text-align: center;
-        border-radius: 10px;
-        font-size: 24px;
-      }
-      #timer {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
-        color: black;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 5px 10px;
-        border-radius: 5px;
-        z-index: 100;
-      }
-      #restart-btn,
-      #next-btn {
-        margin: 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-      }
-      #restart-btn {
-        background-color: #2196f3;
-        color: white;
-      }
-      #next-btn {
-        background-color: #2196f3;
-        color: white;
-        text-decoration: none;
-        display: inline-block;
-      }
-      #restart-btn:hover,
-      #next-btn:hover {
-        opacity: 0, 8;
-      }
+        body {
+            background-image: url('asset/bg.png');
+            background-size: cover;
+            overflow: hidden;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            margin: 0;
+            height: 100vh;
+            background-position: center;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 200px);
+            grid-template-rows: repeat(2, 200px);
+            gap: 100px; /* Adjusted gap for better layout */
+            position: relative; /* Tambahkan ini */
+        }
+        .box {
+            /* position: absolute; Ensure boxes can be moved */
+            width: 200px;
+            height: 200px;
+            cursor: grab;
+            transition: transform 0.2s ease; /* Smooth transition */
+            z-index: 2; /* Higher z-index for boxes to appear on top of the panel */
+            position: absolute; /* Ubah menjadi absolute */
+        }
+        .box.dragging {
+            opacity: 1;
+        }
+        .red { background-image: url('asset/ppanjang.png');  opacity: 0;}
+        .green { background-image: url('asset/kotak.png'); opacity: 0;}
+        .blue { background-image: url('asset/segitiga.png'); opacity: 0;}
+        .purple { background-image: url('asset/lingkaran.png'); opacity: 0;}
+        .orange {background-image: url('asset/tick.png'); display: none;}
+        .panel {
+            z-index: 1; /* Lower z-index for the panel */
+            background-color: #97bdfe;
+            width: 300px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+        .button {
+            width: 200px;
+            height: 100px;
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .input-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 99;
+        }
+        .input-container input {
+            margin-bottom: 10px;
+            z-index: 100;
+        }
+        .box.orange {
+            background-color: orange;
+            pointer-events: none;
+        }
+        .validation-box {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-image: url('asset/tick.png');
+            box-sizing: border-box;
+            z-index: 3;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="grid-container">
-      <div class="box red" draggable="true" style="top: 0; left: 0"></div>
-      <div class="box green" draggable="true" style="top: 0; left: 300px"></div>
-      <div class="box blue" draggable="true" style="top: 300px; left: 0"></div>
-      <div
-        class="box purple"
-        draggable="true"
-        style="top: 300px; left: 300px"
-      ></div>
-      <div class="box orange"></div>
+        <div class="box red" draggable="true" style="top: 0; left: 0;"></div>
+        <div class="box green" draggable="true" style="top: 0; left: 300px;"></div>
+        <div class="box blue" draggable="true" style="top: 300px; left: 0;"></div>
+        <div class="box purple" draggable="true" style="top: 300px; left: 300px;"></div>
+        <div class="box orange"></div>
     </div>
     <div class="panel">
-      <button class="button" onclick="showInput()">Open Input</button>
+        <button class="button" onclick="showInput()">Open Input</button>
     </div>
     <div class="overlay" id="overlay">
-      <div class="input-container">
-        <input type="text" id="userInput" placeholder="Enter code" />
-        <button onclick="submitInput()">Submit</button>
-      </div>
-    </div>
-    <div id="timer">Time left: 60s</div>
-    <div class="popup" id="popupWin">
-      <p>Congratulations!</p>
-      <a id="next-btn" href="">Menu</a>
-      <button id="restart-btn" onclick="location.reload()">Play Again</button>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Enter code">
+            <button onclick="submitInput()">Submit</button>
+        </div>
     </div>
     <script>
-      const usedInputs = new Set();
-      let activeItem = null;
-      let timeLeft = 60;
-      let timerInterval;
-      const timerElement = document.getElementById("timer");
-      const popupWin = document.getElementById("popupWin");
+        const usedInputs = new Set();
+        let activeItem = null;
+        const draggable = document.getElementById('draggable');
+        const rotationBorder = document.getElementById('rotation-border');
+        let isDragging = false;
+        let isRotating = false;
+        let startX, startY, initialLeft, initialTop;
+        let rotation = 0;
+        let lastMouseX, lastMouseY;
+        draggable.addEventListener('mousedown', startInteraction);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', stopInteraction);
 
-      function startTimer() {
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          timerElement.textContent = `Time left: ${timeLeft}s`;
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            showPopupWin();
-          }
-        }, 1000);
-      }
-
-      function showPopupWin() {
-        popupWin.style.display = "block";
-      }
-
-      function showInput() {
-        document.getElementById("overlay").style.display = "flex";
-      }
-
-      function submitInput() {
-        const input = document.getElementById("userInput").value.toLowerCase();
-        let newBox;
-
-        if (usedInputs.has(input)) {
-          alert("This input has already been used.");
-          return;
+        function showInput() {
+            document.getElementById('overlay').style.display = 'flex';
         }
 
-        if (input === "p.l" || input === "pxl") {
-          newBox = createBox("red");
-        } else if (input === "s.s" || input === "sxs") {
-          newBox = createBox("green");
-        } else if (input === "1/2.a.t" || input === "1/2xaxt") {
-          newBox = createBox("blue");
-        } else if (
-          input === "phi.r.r" ||
-          input === "phixrxr" ||
-          input === "22/7xrxr" ||
-          input === "3,14xrxr"
-        ) {
-          newBox = createBox("purple");
-        }
+        function submitInput() {
+            const input = document.getElementById('userInput').value.toLowerCase();
+            let newBox;
 
-        if (newBox) {
-          document.body.appendChild(newBox);
-          newBox.style.left = "50px";
-          newBox.style.top = "50px";
-          makeDraggable(newBox);
-          usedInputs.add(input);
-        }
-
-        document.getElementById("overlay").style.display = "none";
-      }
-
-      function createBox(color) {
-        const box = document.createElement("div");
-        box.className = `box ${color}`;
-        box.setAttribute("draggable", "true");
-        box.style.position = "absolute";
-        box.style.opacity = "100%";
-        const gridContainer = document.querySelector(".grid-container");
-        const rect = gridContainer.getBoundingClientRect();
-        box.style.left = `${rect.left + 50}px`;
-        box.style.top = `${rect.top + 50}px`;
-        return box;
-      }
-
-      function makeDraggable(box) {
-        box.addEventListener("mousedown", (event) => startDragging(box, event));
-        box.addEventListener("touchstart", (event) =>
-          startDragging(box, event.touches[0])
-        );
-      }
-
-      function startDragging(item, event) {
-        event.preventDefault();
-        activeItem = item;
-
-        const touch = event.touches ? event.touches[0] : event;
-        const itemRect = item.getBoundingClientRect();
-        offsetX = touch.clientX - itemRect.left;
-        offsetY = touch.clientY - itemRect.top;
-
-        document.addEventListener("mousemove", onMouseMove);
-        document.addEventListener("touchmove", onTouchMove);
-        document.addEventListener("mouseup", onMouseUp);
-        document.addEventListener("touchend", onMouseUp);
-      }
-
-      function onMouseMove(event) {
-        if (activeItem) {
-          const x = event.clientX - offsetX;
-          const y = event.clientY - offsetY;
-          activeItem.style.left = `${x}px`;
-          activeItem.style.top = `${y}px`;
-          checkOverlap();
-        }
-      }
-
-      function onTouchMove(event) {
-        if (activeItem) {
-          const touch = event.touches[0];
-          const x = touch.clientX - offsetX;
-          const y = touch.clientY - offsetY;
-          activeItem.style.left = `${x}px`;
-          activeItem.style.top = `${y}px`;
-          checkOverlap();
-        }
-      }
-
-      function checkOverlap() {
-        const staticBoxes = document.querySelectorAll(
-          ".grid-container > .box:not(.orange)"
-        );
-        staticBoxes.forEach((staticBox) => {
-          if (
-            activeItem !== staticBox &&
-            isOverlapping(activeItem, staticBox) &&
-            activeItem.className === staticBox.className
-          ) {
-            const staticRect = staticBox.getBoundingClientRect();
-            const activeRect = activeItem.getBoundingClientRect();
-
-            const overlapArea = calculateOverlapArea(staticRect, activeRect);
-            const staticArea = staticRect.width * staticRect.height;
-
-            if (overlapArea / staticArea > 0.9) {
-              createValidationBox(staticBox);
-              activeItem.remove();
-              activeItem = null;
+            if (usedInputs.has(input)) {
+                alert("This input has already been used.");
+                return;
             }
-          }
-        });
-      }
 
-      function calculateOverlapArea(rect1, rect2) {
-        const xOverlap = Math.max(
-          0,
-          Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left)
-        );
-        const yOverlap = Math.max(
-          0,
-          Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top)
-        );
-        return xOverlap * yOverlap;
-      }
+            if (input === 'p.l' || input === 'pxl') {
+                newBox = createBox('red');
+            } else if (input === 's.s' || input === 'sxs') {
+                newBox = createBox('green');
+            } else if (input === '1/2.a.t' || input === '1/2xaxt') {
+                newBox = createBox('blue');
+            } else if (input === 'phi.r.r' || input === 'phixrxr' || input === '22/7xrxr' || input === '3,14xrxr') {
+                newBox = createBox('purple');
+            }
 
-      function isOverlapping(element1, element2) {
-        const rect1 = element1.getBoundingClientRect();
-        const rect2 = element2.getBoundingClientRect();
-        return !(
-          rect1.right < rect2.left ||
-          rect1.left > rect2.right ||
-          rect1.bottom < rect2.top ||
-          rect1.top > rect2.bottom
-        );
-      }
+            if (newBox) {
+                document.body.appendChild(newBox);
+                newBox.style.left = '50px';
+                newBox.style.top = '50px';
+                makeDraggable(newBox);
+                usedInputs.add(input);
+            }
 
-      function createValidationBox(staticBox) {
-        const validationBox = document.createElement("div");
-        validationBox.className = "validation-box";
-        validationBox.style.left = staticBox.style.left;
-        validationBox.style.top = staticBox.style.top;
-
-        const gridContainer = document.querySelector(".grid-container");
-        gridContainer.appendChild(validationBox);
-
-        staticBox.style.display = "none";
-        staticBox.remove();
-
-        checkGameCompletion();
-      }
-
-      function checkGameCompletion() {
-        const remainingBoxes = document.querySelectorAll(
-          ".grid-container > .box:not(.orange)"
-        );
-        const validationBoxes = document.querySelectorAll(".validation-box");
-        if (remainingBoxes.length === 0 && validationBoxes.length === 4) {
-          clearInterval(timerInterval);
-          showPopupWin();
+            document.getElementById('overlay').style.display = 'none';
         }
-      }
 
-      document.querySelectorAll(".box").forEach(makeDraggable);
-      startTimer();
+        function createBox(color) {
+            const box = document.createElement('div');
+            box.className = `box ${color}`;
+            box.setAttribute('draggable', 'true');
+            box.style.position = 'absolute';
+            box.style.opacity = '100%';
+            // Tentukan posisi awal
+            const gridContainer = document.querySelector('.grid-container');
+            const rect = gridContainer.getBoundingClientRect();
+            box.style.left = `${rect.left + 50}px`;
+            box.style.top = `${rect.top + 50}px`;
+            return box;
+        }
+
+        function makeDraggable(box) {
+            box.addEventListener('mousedown', (event) => startDragging(box, event));
+            box.addEventListener('touchstart', (event) => startDragging(box, event.touches[0]));
+        }
+
+        function startDragging(item, event) {
+            event.preventDefault();
+            activeItem = item;
+            // activeItem.classList.add('dragging'); // Set opacity to 100% when dragging
+
+            const touch = event.touches ? event.touches[0] : event;
+            const itemRect = item.getBoundingClientRect();
+            offsetX = touch.clientX - itemRect.left;
+            offsetY = touch.clientY - itemRect.top;
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('touchmove', onTouchMove);
+            document.addEventListener('mouseup', onMouseUp);
+            document.addEventListener('touchend', onMouseUp);
+        }
+
+        function onMouseMove(event) {
+            if (activeItem) {
+                const x = event.clientX - offsetX;
+                const y = event.clientY - offsetY;
+                activeItem.style.left = `${x}px`;
+                activeItem.style.top = `${y}px`;
+                checkOverlap();
+            }
+        }
+
+        function onTouchMove(event) {
+            if (activeItem) {
+                const touch = event.touches[0];
+                const x = touch.clientX - offsetX;
+                const y = touch.clientY - offsetY;
+                activeItem.style.left = `${x}px`;
+                activeItem.style.top = `${y}px`;
+                checkOverlap();
+            }
+        }
+
+        function checkOverlap() {
+            const staticBoxes = document.querySelectorAll('.grid-container > .box:not(.orange)');
+            staticBoxes.forEach(staticBox => {
+                if (activeItem !== staticBox && isOverlapping(activeItem, staticBox) && activeItem.className === staticBox.className) {
+                    const staticRect = staticBox.getBoundingClientRect();
+                    const activeRect = activeItem.getBoundingClientRect();
+                    
+                    // Hitung area tumpang tindih
+                    const overlapArea = calculateOverlapArea(staticRect, activeRect);
+                    const staticArea = staticRect.width * staticRect.height;
+                    
+                    // Jika area tumpang tindih lebih dari 90% dari area staticBox
+                    if (overlapArea / staticArea > 0.9) {
+                        createValidationBox(staticBox);
+                        activeItem.remove();
+                        activeItem = null;
+                    }
+                }
+            });
+        }
+
+        function calculateOverlapArea(rect1, rect2) {
+            const xOverlap = Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left));
+            const yOverlap = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
+            return xOverlap * yOverlap;
+        }
+
+        function isOverlapping(element1, element2) {
+            const rect1 = element1.getBoundingClientRect();
+            const rect2 = element2.getBoundingClientRect();
+            return !(rect1.right < rect2.left || 
+                     rect1.left > rect2.right || 
+                     rect1.bottom < rect2.top || 
+                     rect1.top > rect2.bottom);
+        }
+
+        function createValidationBox(staticBox) {
+            const validationBox = document.createElement('div');
+            validationBox.className = 'validation-box';
+            validationBox.style.left = staticBox.style.left;
+            validationBox.style.top = staticBox.style.top;
+
+            // Tambahkan validationBox ke dalam grid-container
+            const gridContainer = document.querySelector('.grid-container');
+            gridContainer.appendChild(validationBox);
+
+            // Sembunyikan dan hapus staticBox
+            staticBox.style.display = 'none';
+            staticBox.remove();
+
+            // Cek apakah semua box telah digabungkan
+            checkGameCompletion();
+        }
+
+        function checkGameCompletion() {
+            const remainingBoxes = document.querySelectorAll('.grid-container > .box:not(.orange)');
+            const validationBoxes = document.querySelectorAll('.validation-box');
+            if (remainingBoxes.length === 0 && validationBoxes.length === 4) {
+                alert("Congratulations! You've completed the puzzle!");
+            }
+        }
+
+        document.querySelectorAll('.box').forEach(makeDraggable);
     </script>
-  </body>
+</body>
 </html>
