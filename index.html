@@ -98,15 +98,15 @@
         }
         @media screen and (max-width: 2000px) {
             .grid-container {
-                grid-template-columns: repeat(2, minmax(70px, 130px));
-                grid-template-rows: repeat(2, minmax(70px, 130px));
+                grid-template-columns: repeat(2, minmax(10px, 100px));
+                grid-template-rows: repeat(2, minmax(10px, 100px));
                 gap: 10px;
                 margin-left: 120px; /* Reduced space for panel */
             }
             .box {
             /* position: absolute; Ensure boxes can be moved */
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             cursor: grab;
             transition: transform 0.2s ease; /* Smooth transition */
             z-index: 2; /* Higher z-index for boxes to appear on top of the panel */
