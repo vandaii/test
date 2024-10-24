@@ -6,15 +6,12 @@
     <title>Puzzle Game</title>
     <style>
         body {
-            background-image: url('asset/bg.png');
-            background-size: cover;
-            overflow: hidden;
+            background-color: white;
             display: flex;
             justify-content: center; /* Center horizontally */
             align-items: center; /* Center vertically */
             margin: 0;
             height: 100vh;
-            background-position: center;
         }
         .grid-container {
             display: grid;
@@ -35,10 +32,10 @@
         .box.dragging {
             opacity: 1;
         }
-        .red { background-image: url('asset/ppanjang.png');  opacity: 0;}
-        .green { background-image: url('asset/kotak.png'); opacity: 0;}
-        .blue { background-image: url('asset/segitiga.png'); opacity: 0;}
-        .purple { background-image: url('asset/lingkaran.png'); opacity: 0;}
+        .red { background-image: url('asset/bppanjang.png'); }
+        .green { background-image: url('asset/bkotak.png'); }
+        .blue { background-image: url('asset/bsegitiga.png'); }
+        .purple { background-image: url('asset/blingkaran.png'); }
         .orange {background-image: url('asset/tick.png'); display: none;}
         .panel {
             z-index: 1; /* Lower z-index for the panel */
@@ -169,6 +166,19 @@
         function createBox(color) {
             const box = document.createElement('div');
             box.className = `box ${color}`;
+            // Add special handling for red box background
+            if (color === 'red') {
+                box.style.backgroundImage = "url('asset/ppanjang.png')";
+            }
+            if (color === 'green') {
+                box.style.backgroundImage = "url('asset/kotak.png')";
+            }
+            if (color === 'blue') {
+                box.style.backgroundImage = "url('asset/segitiga.png')";
+            }
+            if (color === 'purple') {
+                box.style.backgroundImage = "url('asset/lingkaran.png')";
+            }
             box.setAttribute('draggable', 'true');
             box.style.position = 'absolute';
             box.style.opacity = '100%';
